@@ -14,8 +14,8 @@ class Splashscreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Lottie.asset('assets/splash.json'),
-            const SizedBox(height: 40),
+            Lottie.asset('assets/splash1.json'),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -50,7 +50,7 @@ class Splashscreen extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => Registerscreen()));
                     },
-                    child: Text("Register"),
+                    child: Text("Signup"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 12, 12, 12),
                       foregroundColor: Colors.white,

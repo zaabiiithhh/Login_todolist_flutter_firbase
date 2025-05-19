@@ -23,7 +23,7 @@ class _LoginscreenState extends State<Loginscreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "Login",
+            "Log in",
             style: TextStyle(
               color: Colors.white,
               fontSize: 30,
@@ -122,7 +122,7 @@ class _LoginscreenState extends State<Loginscreen> {
                   MaterialPageRoute(builder: (context) => Registerscreen()));
             },
             child: Text(
-              "Don't have an account? Signup",
+              "Don't have an account? Sign up",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
