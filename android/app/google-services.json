@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "17922558446",
+    "project_id": "t000-dooo-appo",
+    "storage_bucket": "t000-dooo-appo.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17922558446:android:6255bd6d25d67b266026ff",
+        "android_client_info": {
+          "package_name": "com.example.chat_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJSnfprChOFF9bdoYj5FP0Q96d-QgduTo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
