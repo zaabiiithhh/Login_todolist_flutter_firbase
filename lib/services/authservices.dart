@@ -1,3 +1,4 @@
+import 'package:chat_app/login.dart';
 import 'package:chat_app/todolist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,6 +22,10 @@ Future<void> register({
         .set({"username": username, "email": email});
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text("User Created Successfully")));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Loginscreen()),
+    );
   } catch (e) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(e.toString())));
@@ -55,6 +60,10 @@ Future<void> forgot({
     await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text("resent email")));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Loginscreen()),
+    );
   } catch (e) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(e.toString())));

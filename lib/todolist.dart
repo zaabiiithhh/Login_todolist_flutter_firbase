@@ -10,7 +10,6 @@ class Todolist extends StatefulWidget {
 
 class _TodolistState extends State<Todolist> {
   TextEditingController taskcontroller = TextEditingController();
-  List<String> todos = [];
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +17,14 @@ class _TodolistState extends State<Todolist> {
       backgroundColor: Colors.black,
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             width: 400,
-            height: 300,
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -36,25 +36,19 @@ class _TodolistState extends State<Todolist> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
                       child: TextField(
                         controller: taskcontroller,
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(
-                            Icons.add,
-                            color: Colors.black,
-                          ),
+                          prefixIcon:
+                              const Icon(Icons.add, color: Colors.black),
                           filled: true,
                           fillColor: Colors.white,
                           hintText: "Enter your task",
-                          hintStyle: TextStyle(
-                            color: Colors.black,
-                          ),
+                          hintStyle: const TextStyle(color: Colors.black),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
                             borderSide: BorderSide.none,
@@ -62,14 +56,12 @@ class _TodolistState extends State<Todolist> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 2,
-                    ),
+                    const SizedBox(width: 8),
                     ElevatedButton(
                       onPressed: () {
-                        if (taskcontroller.text.trim().isNotEmpty) {
-                          Todoservices.addtodo(
-                              task: taskcontroller.text.trim());
+                        final text = taskcontroller.text.trim();
+                        if (text.isNotEmpty) {
+                          Todoservices.addtodo(task: text);
                           taskcontroller.clear();
                         }
                       },
@@ -84,84 +76,93 @@ class _TodolistState extends State<Todolist> {
                     )
                   ],
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                    child: StreamBuilder<List<Map<String, dynamic>>>(
-                        stream: Todoservices.gettodo(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            List<Map<String, dynamic>> todos = snapshot.data!;
-                            return ListView.builder(
-                                itemCount: todos.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    title: Text(todos[index]['todo'] ?? ''),
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            final todoId = todos[index]['id'];
-                                            if (todoId == null)
-                                              return; // extra safety
-                                            final editController =
-                                                TextEditingController(
-                                                    text: todos[index]
-                                                            ['todo'] ??
-                                                        '');
+                const SizedBox(height: 10),
+                Flexible(
+                  child: StreamBuilder<List<Map<String, dynamic>>>(
+                    stream: Todoservices.gettodo(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  title: Text("Edit TODO"),
-                                                  content: TextField(
-                                                    controller: editController,
-                                                    decoration: InputDecoration(
-                                                        hintText: "Edit todo"),
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        final updatedText =
-                                                            editController.text
-                                                                .trim();
-                                                        if (updatedText
-                                                            .isNotEmpty) {
-                                                          Todoservices
-                                                              .updatetodo(
-                                                            id: todoId,
-                                                            text: updatedText,
-                                                          );
-                                                          Navigator.pop(
-                                                              context);
-                                                        }
-                                                      },
-                                                      child: Text("Update"),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          },
-                                          icon: Icon(Icons.edit),
-                                        ),
-                                        IconButton(
-                                            onPressed: () {
-                                              Todoservices.deletetodo(
-                                                  id: todos[index]['id']);
-                                            },
-                                            icon: Icon(Icons.delete))
-                                      ],
-                                    ),
-                                  );
-                                });
-                          } else {
-                            return CircularProgressIndicator();
-                          }
-                        }))
+                      if (snapshot.hasData) {
+                        final todos = snapshot.data!;
+                        if (todos.isEmpty) {
+                          return const Text("No tasks yet.");
+                        }
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: todos.length,
+                          itemBuilder: (context, index) {
+                            final todo = todos[index];
+                            return ListTile(
+                              title: Text(todo['todo'] ?? ''),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.edit),
+                                    onPressed: () {
+                                      final todoId = todo['id'];
+                                      final editController =
+                                          TextEditingController(
+                                        text: todo['todo'] ?? '',
+                                      );
+
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text("Edit your task"),
+                                            content: TextField(
+                                              controller: editController,
+                                              decoration: const InputDecoration(
+                                                hintText: "Edit todo",
+                                              ),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  final updatedText =
+                                                      editController.text
+                                                          .trim();
+                                                  if (updatedText.isNotEmpty &&
+                                                      todoId != null) {
+                                                    Todoservices.updatetodo(
+                                                      id: todoId,
+                                                      text: updatedText,
+                                                    );
+                                                    Navigator.pop(context);
+                                                  }
+                                                },
+                                                child: const Text("Update"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () {
+                                      final todoId = todo['id'];
+                                      if (todoId != null) {
+                                        Todoservices.deletetodo(id: todoId);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        return const Text("Something went wrong!");
+                      }
+                    },
+                  ),
+                ),
               ],
             ),
           ),
